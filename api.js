@@ -19,7 +19,6 @@ con.connect(err => {
 	if(err) {
         throw err;
 	}
-	console.log("DB Connected on " + con.port);
 });
 
 router.get("/",(req,res) => {

@@ -11,7 +11,7 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
-const api = require('api')(app.io);
+const api = require('./api')(app.io);
 
 app.use('/API',api);
 app.get('/',(req,res) => {
@@ -23,4 +23,6 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
 
-app.listen(port);
+app.listen(port,() => {
+    console.log("Listening on " + port);
+});
