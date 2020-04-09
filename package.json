@@ -1,0 +1,19 @@
+{
+  "name": "heroku",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nghviet/Heroku.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nghviet/Heroku/issues"
+  },
+  "homepage": "https://github.com/Nghviet/Heroku#readme"
+}
