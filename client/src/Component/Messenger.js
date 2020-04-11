@@ -8,11 +8,13 @@ import {
 
 var socket;
 if (process.env.NODE_ENV !== 'production') socket = socketClient('http://localhost:5000');
-else socket = socketClient("//arcane-everglades-60566.heroku.com:" + process.env.PORT);
+else socket = socketClient("https//arcane-everglades-60566.heroku.com:" + process.env.PORT);
 var uid = undefined;
 socket.on('connect', () => {
     if(uid != undefined) socket.emit('shake',{uid : uid});
 });
+
+console.log(process.env.PORT);
 
 class Messenger extends Component {
     constructor(props) {
