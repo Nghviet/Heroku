@@ -26,15 +26,9 @@ class Login extends Component {
         if(this.props.clicked) return;
         this.props.onClick();
         axios.post('API/login',this.state).then((res) => {
-            console.log(this.state);
-            console.log(res);
             if(res.data.code === 1) {
                 this.token = res.data.token;
                 this.setState({token : res.data.token});
-                console.log("Login complete with " + this.token);
-                
-                console.log(this.props);
-
                 this.props.checkLogin(res.data._id,res.data.name);
                 
             }
@@ -42,23 +36,21 @@ class Login extends Component {
     }
 
     //Render
-    render() {
-        let view = '';
-        if(this.token === null) {
-            view =     
-                <form onSubmit = {this.onSubmitLogin}>
-                    <table className = "table table-borderless text-white w-auto">
-                        <tbody>
+    render() {   
+        return (
+            <form onSubmit = {this.onSubmitLogin}>
+                <table className = "table table-borderless text-white w-auto">
+                    <tbody>
                         <tr>
                             <th > Email or phonenumber </th>
                             <th> Password </th>
                         </tr>
                         <tr>
                             <th>
-                                <input type = "email" name = "email" onChange = {this.onChange} className = "input" />
+                                <input type = "email" name = "email" onChange = {this.onChange} className = "input" required/>
                             </th>
                             <th>
-                                <input type = "password" name = "password" onChange = {this.onChange} className = " input" />
+                                <input type = "password" name = "password" onChange = {this.onChange} className = " input" required />
                             </th>
                             <th>
                                 <button type = "submit"> Submit </button>
@@ -66,13 +58,8 @@ class Login extends Component {
                         </tr>
                         </tbody>
                     </table> 
-                </form>;
-        }
-        else {
-            view = <div> Welcome to Facebook </div>;
-        }
-
-        return view;
+            </form>
+        )
     }
 }
 

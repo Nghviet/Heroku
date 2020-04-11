@@ -25,7 +25,6 @@ class Newsfeed extends Component {
         axios.post('API/allPost',{userID : this.state.id})
         .then(res => {
             this.setState({post : res.data});
-            console.log(res.data);
         }).catch(err =>{
             console.log(err)
         });

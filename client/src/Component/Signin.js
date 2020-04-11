@@ -28,7 +28,6 @@ class Signin extends Component {
         this.props.onClick();
         axios.post('API/signup',this.state)
         .then( (res) => {
-            console.log(res);
             if(res.data.code === 1) {
                 this.setState({token : res.data.token});
                 this.props.checkSignin(res.data._id,this.state.name);
@@ -46,15 +45,15 @@ class Signin extends Component {
                 <tbody>
                     <tr>
                         <th> Username </th>
-                        <th> <input type = "text" name = "name" onChange = {this.onChange} className = "input" /> </th>
+                        <th> <input type = "text" name = "name" onChange = {this.onChange} className = "input" required/> </th>
                     </tr>
                     <tr>
                         <th> Email </th>
-                        <th> <input type = "email" name = "email" onChange = {this.onChange} className = " input" /> </th>
+                        <th> <input type = "email" name = "email" onChange = {this.onChange} className = " input" required /> </th>
                     </tr>
                     <tr>
                         <th> Password </th>
-                        <th> <input type = "password" name = "password" onChange = {this.onChange} className = "input" /> </th>
+                        <th> <input type = "password" name = "password" onChange = {this.onChange} className = "input" required /> </th>
                     </tr>
                 </tbody>
             </table> 

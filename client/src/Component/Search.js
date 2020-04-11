@@ -21,11 +21,8 @@ class Search extends Component {
 
     onSubmit = (e) => {
         e.preventDefault();
-        console.log(e.target.elements[0].value);
         var keyword = e.target.elements[0].value;
-        console.log(this.state.id);
         axios.post("API/search",{keyword : keyword,id : this.state.id}).then(res =>{ 
-            console.log(res.data);
             this.setState({matchedUser : res.data.matched});
         })
         .catch(err => {
