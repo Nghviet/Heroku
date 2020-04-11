@@ -8,7 +8,7 @@ import {
 
 var socket;
 if (process.env.NODE_ENV !== 'production') socket = socketClient('http://localhost:5000');
-else socket = socketClient('http://arcane-everglades-60566.heroku.com/');
+else socket = socketClient('https://arcane-everglades-60566.heroku.com/');
 var uid = undefined;
 socket.on('connect', () => {
     if(uid != undefined) socket.emit('shake',{uid : uid});
