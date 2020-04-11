@@ -23,9 +23,9 @@ class Signin extends Component {
     }
 
     onSubmit(evt) {
+        evt.preventDefault();
         if(this.props.clicked) return;
         this.props.onClick();
-        evt.preventDefault();
         axios.post('API/signup',this.state)
         .then( (res) => {
             console.log(res);

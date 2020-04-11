@@ -13,16 +13,17 @@ class Gate extends Component {
 
     onClick = () => {
         this.setState({clicked : true});
+        console.log("Clicked and lock");
     }
 
     render() {
         return (
             <div className = "App">
                 <div className = "login">
-                    < Login checkLogin = {this.props.changeState} clicked = {this.state.clicked}/> 
+                    < Login checkLogin = {this.props.changeState} onClick = {this.onClick} clicked = {this.state.clicked}/> 
                 </div>
                 <div className = "signin"> 
-                    < Signin checkSignin = {this.props.changeState} clicked = {this.state.clicked} /> 
+                    < Signin checkSignin = {this.props.changeState} onClick = {this.onClick} clicked = {this.state.clicked}/> 
                 </div> 
             </div>
         );
