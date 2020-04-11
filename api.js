@@ -40,7 +40,6 @@ router.get("/",(req,res) => {
 router.post("/login",function(req,res) {
 	var email = req.body.email;
 	var password = req.body.password;
-
 	con.query("SELECT * FROM user WHERE email = '"+email+"'" ,(err,result) => {
 		if(err) throw err;
 		if(result.length != 1) {
@@ -215,18 +214,18 @@ router.post("/allRequest",(req,res) => {
 	})
 });
 
-module.exports =  (io) => {
+module.exports =  (req,res) => {
+    var io = req.app.get('socket');
     var clients = [];
     io.on('connection', socket => {
         console.log("New connection");
-
         socket.on('shake',data => {     
-        for(var i=0;i<clients.length;i++) 
-            if(clients[i].uid === data.uid && clients[i].socketId === socket.id) return; 
-        var clientInfo = {};
-        clientInfo.uid = data.uid;
-        clientInfo.socketId = socket.id;
-        clients.push(clientInfo);
+            for(var i=0;i<clients.length;i++) 
+                if(clients[i].uid === data.uid && clients[i].socketId === socket.id) return; 
+            var clientInfo = {};
+            clientInfo.uid = data.uid;
+            clientInfo.socketId = socket.id;
+            clients.push(clientInfo);
         })
 
         socket.on('disconnect', () => {

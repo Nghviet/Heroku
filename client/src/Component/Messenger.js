@@ -6,7 +6,9 @@ import {
     Button
 } from 'react-bootstrap';
 
-const socket = socketClient("localhost");
+var socket;
+if (process.env.NODE_ENV !== 'production') socket = socketClient('http://localhost:5000');
+else socket = socketClient("//arcane-everglades-60566.heroku.com:" + process.env.PORT);
 var uid = undefined;
 socket.on('connect', () => {
     if(uid != undefined) socket.emit('shake',{uid : uid});
