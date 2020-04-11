@@ -6,7 +6,7 @@ import {
     Button
 } from 'react-bootstrap';
 
-const socket = socketClient("localhost:8081");
+const socket = socketClient("localhost");
 var uid = undefined;
 socket.on('connect', () => {
     if(uid != undefined) socket.emit('shake',{uid : uid});

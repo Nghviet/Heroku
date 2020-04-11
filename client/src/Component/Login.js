@@ -22,6 +22,8 @@ class Login extends Component {
         this.setState({ [evt.target.name]: evt.target.value });
     }
     onSubmitLogin(e) {
+        if(this.props.clicked) return;
+        this.onClick();
         e.preventDefault();
         axios.post('API/login',this.state).then((res) => {
             console.log(this.state);

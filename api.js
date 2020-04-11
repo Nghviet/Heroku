@@ -5,15 +5,27 @@ const bcrypt = require('bcrypt');
 
 const mysql = require('mysql');
 
-const consoleLog = true;
-
-var con = mysql.createConnection({
-	host : "85.10.205.173",
-    port : "3306",
-	user : "nghviet",
-	password : "F@AnR9XTqCQ2vPj",
-	database : "nghviet"
-});
+const cookieParser = require('cookie-parser');
+var con;
+if (process.env.NODE_ENV !== 'production') {
+    console.log("Local");
+    con = mysql.createConnection({
+        host : "127.0.0.1",
+        port : "3306",
+        user : "root",
+        password : "1111",
+        database : "INT2207"
+    })
+}
+else {
+    con = mysql.createConnection({
+    	host : "85.10.205.173",
+        port : "3306",
+    	user : "nghviet",
+    	password : "F@AnR9XTqCQ2vPj",
+    	database : "nghviet"
+    });
+}
 
 con.connect(err => {
 	if(err) {
@@ -26,8 +38,6 @@ router.get("/",(req,res) => {
 });
 
 router.post("/login",function(req,res) {
-    if(consoleLog) console.log("Login");
-
 	var email = req.body.email;
 	var password = req.body.password;
 
@@ -38,7 +48,6 @@ router.post("/login",function(req,res) {
 			return;
 		}
 		else {
-			console.log(password);
 			var ac = bcrypt.compareSync(password,result[0].password)
 			if(ac == false) {
 				res.send({code : 0});
@@ -51,8 +60,6 @@ router.post("/login",function(req,res) {
 });
 
 router.post("/signup",async (req,res) => {
-    if(consoleLog) console.log("Sign up");
-
 	var email = req.body.email;
 	var password = req.body.password;
 	var name = req.body.name;
@@ -93,8 +100,6 @@ router.post("/signup",async (req,res) => {
 });
 
 router.post("/post",async(req,res) => {
-    if(consoleLog) console.log("Post");
-
 	var id = req.body.userID;
 	var name = req.body.name;
 	var post = req.body.post;
@@ -127,8 +132,6 @@ router.post("/allPost", async(req,res) => {
 });
 
 router.post("/search" ,(req,res) => {
-    if(consoleLog) console.log("Search");
-
 	var keyword = req.body.keyword;
 	var userid = req.body.id;
 	con.query("SELECT * FROM user WHERE (name LIKE '%"+ keyword + "%' OR email LIKE '%" + keyword + "%') "

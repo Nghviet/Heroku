@@ -5,7 +5,8 @@ import '../App.css';
 
 import {
     Card,
-    Button
+    Button,
+    Container
 } from 'react-bootstrap';
 
 import Post from './Post';
@@ -85,8 +86,8 @@ class Newsfeed extends Component {
 
     render() {
         return (
-        <div>
-            <Card>
+        <Container>
+            <Card className = "mt-2">
                 <Card.Header> New post</Card.Header>
                 <Card.Body> 
                     <form onSubmit = {this.onPost}> 
@@ -95,16 +96,14 @@ class Newsfeed extends Component {
                     </form>
                 </Card.Body>
             </Card>
-            <div class = "">
-                {this.state.newPost.map(post => (
-                    <NewPost key = {post.id} post = {post.post} name = {this.state.name} />
-                ))}
+            {this.state.newPost.map(post => (
+                <NewPost key = {post.id} post = {post.post} name = {this.state.name} />
+            ))}
 
-                {this.state.post.map(post => (
+            {this.state.post.map(post => (
                     <Post key = {post.id} post = {post} />
-                ))}
-            </div>
-        </div>);
+            ))}
+        </Container>);
     }
 }
 

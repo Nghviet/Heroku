@@ -14,7 +14,7 @@ class Post extends Component {
 
 	render() {
 		return (
-            <Card key = {this.state.key}>  
+            <Card key = {this.state.key} className = "mt-4">   
                 <Card.Header>
                     {this.state.name}
                 </Card.Header>

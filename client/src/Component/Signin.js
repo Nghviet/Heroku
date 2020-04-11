@@ -12,7 +12,6 @@ class Signin extends Component {
             name :'',
             token: ''
         }
-
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
     }
@@ -24,6 +23,8 @@ class Signin extends Component {
     }
 
     onSubmit(evt) {
+        if(this.props.clicked) return;
+        this.props.onClick();
         evt.preventDefault();
         axios.post('API/signup',this.state)
         .then( (res) => {

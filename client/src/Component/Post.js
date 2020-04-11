@@ -54,7 +54,7 @@ class Post extends Component {
 
 	render() {
 		return (
-            <Card>  
+            <Card className = "mt-4">  
                 <Card.Header>
                     {this.state.name}
                 </Card.Header>

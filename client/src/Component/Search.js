@@ -1,5 +1,11 @@
 import React , {Component} from 'react';
 
+import {
+    Container,
+    Form,
+    Button
+} from 'react-bootstrap';
+
 import axios from 'axios';
 
 import SearchTab from './SearchTab';
@@ -26,11 +32,15 @@ class Search extends Component {
             console.log(err);
         })
     }
+
+    onSubmitTest = e => {
+        console.log(e);
+    }
     
 
     render() {
         return (
-        <>
+        <Container>
             <form onSubmit = {this.onSubmit} > 
                 <div class = "form-group form-inline">
                     <input type = "text" class = "form-control" placeholder = "Keyword" id = "keyword" />
@@ -44,7 +54,7 @@ class Search extends Component {
                 ))}
             </>
 
-        </>
+        </Container>
         );
     }
 }

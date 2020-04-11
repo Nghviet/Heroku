@@ -97,8 +97,7 @@ class Main extends Component {
                         <Nav.Link href='/messenger'> Messenger </Nav.Link>
                     </Nav>
 
-                    <Button onClick = {this.logOut}> Logout</Button>
-                            
+                    <Button onClick = {this.logOut}> Logout</Button>                 
                 </Navbar>
                 </div>
                 {search}
