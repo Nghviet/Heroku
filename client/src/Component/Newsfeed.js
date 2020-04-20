@@ -100,7 +100,7 @@ class Newsfeed extends Component {
             ))}
 
             {this.state.post.map(post => (
-                    <Post key = {post.id} post = {post} />
+                <Post key = {post.id} post = {post} />
             ))}
         </Container>);
     }

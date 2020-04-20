@@ -19,7 +19,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 else {
     con = mysql.createConnection({
-    	host : "85.10.205.173",
+    	host : "db4free.net",
         port : "3306",
     	user : "nghviet",
     	password : "F@AnR9XTqCQ2vPj",
@@ -206,19 +206,15 @@ router.post("/checkRequest",(req,res) => {
 
 router.post("/allRequest",(req,res) => {
 	var id = req.body.id;
-	console.log(req.body);
 	con.query("SELECT * FROM pendingRequest,user WHERE pendingRequest.toID ='" + id + "' AND user.id = pendingRequest.fromID",(err,result) => { 
 		if(err) throw err;
-		console.log(result);
 		res.send({code : 1, result : result});
 	})
 });
 
-module.exports =  (req,res) => {
-    var io = req.app.get('socket');
+module.exports =  (io) => {
     var clients = [];
     io.on('connection', socket => {
-        console.log("New connection");
         socket.on('shake',data => {     
             for(var i=0;i<clients.length;i++) 
                 if(clients[i].uid === data.uid && clients[i].socketId === socket.id) return; 
@@ -234,62 +230,91 @@ module.exports =  (req,res) => {
         })
 
         socket.on('chatList', (uid) => {
-            console.log(uid+" require");
-            con.query("SELECT DISTINCT toID,fromID FROM chat WHERE toID = '" + uid +"' OR fromID = '" + uid +"' GROUP BY toID,fromID ORDER BY MAX(date) DESC", (err,hasChat) => {
+            con.query("SELECT DISTINCT fromID, toID,name FROM chat,user WHERE user.id = chat.fromID AND (fromID = '" + uid + "' OR toID = '" + uid +"') GROUP BY fromID,toID ORDER BY MAX(date) ASC",(err,rawChat) => {
                 if(err) throw err;
-                if(hasChat.length == 0) {
-                    con.query("SELECT friendid FROM friend WHERE userid = '" + uid + "'", 
-                        (err,result) => {
-                            if(err) throw err;
-                            console.log(result);
-                            var results = {
-                                chatList : result,
-                                curChat :[],
-                                curChatID: ""
-                            }
-                            for(var i=0;i<clients.length;i++) if(clients[i].uid == uid)
-                                io.to(clients[i].socketId).emit('chatListRet',results); 
-                        })
-                } 
-                else {
-                    var curChatID = hasChat[0];
-                    con.query("SELECT * FROM chat WHERE (fromID = '" + uid + "' AND '" + curChatID + "') OR (fromID = '" + curChatID + "' AND toID = '" + uid +"') ORDER BY date DESC",
-                        (err,result) => {
-                            var friendList = [];
-                            for(var i=0;i<hasChat.length;i++) friendList.push({friendid : hasChat.toID});
-                            var results = {
-                                chatList : friendList,
-                                curChat : result,
-                                curChatID : curChatID
-                            }
-
-                            for(var i=0;i<clients.length;i++) if(clients[i].uid == uid)
-                            io.to(clients[i].socketId).emit('chatListRet',results);
-                            return;
-                        })
+                var chatListID = [];
+                var chatListFull = [];
+                for(var i=0;i<rawChat.length;i++) {
+                    if(rawChat[i].fromID === uid) {
+                        if(chatListID.indexOf(rawChat[i].toID) === -1) {
+                            chatListID.push(rawChat[i].toID);
+                            chatListFull.push({ 
+                                id : rawChat[i].toID,
+                                name : rawChat[i].name
+                            });
+                        }
+                    }
+                    else {
+                        if(chatListID.indexOf(rawChat[i].fromID) === -1) {
+                            chatListID.push(rawChat[i].fromID);
+                            chatListFull.push({
+                                id : rawChat[i].fromID,
+                                name : rawChat[i].name
+                            })
+                        }
+                    }
                 }
-            })
+
+                con.query("SELECT * FROM friend,user WHERE user.id = friend.friendid AND friend.userid ='" + uid+ "'",(err,friendList) => {
+                    if(err) throw err;
+                    for(var i=0;i<friendList.length;i++) {
+                        if(chatListID.indexOf(friendList[i].id) === -1) {
+                            chatListID.push(friendList[i].id)
+                            chatListFull.push({
+                                id : friendList[i].id,
+                                name : friendList[i].name
+                            })
+                        }
+                    }
+                    var lastChatID = chatListID[0];
+                    con.query("SELECT * FROM chat WHERE (fromID = '" + uid +"' AND toID = '" + lastChatID +"') OR ( fromID = '" + lastChatID + "' AND toID = '" + uid + "') ORDER BY date ASC",(err,conv) => {
+                        if(err) throw err;
+                        socket.emit('chatListRet',{
+                            chatList : chatListFull,
+                            curChat : conv,
+                            curChatID : lastChatID
+                        })
+                    })
+                })
+            })   
         })
 
         socket.on('message',data => {
-            var from = data.fromId;
-            var to = data.toId;
-            var chat = data.chat;
+            var from = data.fromID;
+            var to = data.toID;
+            var chat = data.message;
             var time = Date.now();
             var socketFrom = clients.find(obj => obj.uid == from);
             var socketTo = clients.find(obj => obj.uid == to);
-
-            if(socketTo != undefined) io.to(socketTo).emit('newMessage',{data});
-
             con.query("INSERT INTO chat(fromID,toID,chat,date)" + 
-                      "VALUE ('" + from + "', '" + to + "', '" + chat +"', FROM_UNIXTIME(''" + time * 0.001 +"'))",
+                      "VALUE ('" + from + "', '" + to + "', '" + chat +"', FROM_UNIXTIME('" + time * 0.001 +"'))",
                 (err,result) => {
                     if(err) throw err;
+                    console.log(result.insertId);
+                    for(var i=0;i<clients.length;i++) if(clients[i].uid === from || clients[i].uid === to) {
+                        io.to(clients[i].socketId).emit('newMessage',{
+                            fromID : from,
+                            toID : to,
+                            chat : chat,
+                            id : result.insertId
+                        })
+                    }
             });
+
+            for(var i=0;i<clients.length;i++) if(clients[i].uid === to) io.to(clients[i].socketId.emit('newMessage',{fromID : to,chat : chat}))
         })
 
-        socket.on('laugh',data => {
-            
+        socket.on('fetch',data => {
+            var uid = data.uid;
+            var eid = data.eid;
+            con.query("SELECT * FROM chat WHERE (fromID = '" + uid + "' AND toID = '" + eid + "') OR (fromID = '" + eid + "' AND toID = '" + uid +"') ORDER BY date ASC",
+                (err,result) => {
+                    if(err) throw err;
+                    for(var i=0;i<clients.length;i++) if(clients[i].uid == uid)
+                        io.to(clients[i].socketId).emit('fetchRep',result);
+                })
+        
+
         })
     })
     return router;

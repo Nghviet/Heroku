@@ -39,7 +39,14 @@ class Signin extends Component {
     }
 
     render() {
-    let view =      
+        var view;
+        if(!this.props.clicked)  view = <button  type = "submit"> Submit </button>;
+        else view = <button type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+                </button>
+
+    return (
         <form onSubmit = {this.onSubmit} className = "form">
             <table className = "table table-borderless text-black ">
                 <tbody>
@@ -57,9 +64,9 @@ class Signin extends Component {
                     </tr>
                 </tbody>
             </table> 
-            <button type = "submit"> Submit </button>
-        </form> ;
-    return view
+            {view}
+        </form> 
+    )
     }
 }
 

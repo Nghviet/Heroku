@@ -1,9 +1,7 @@
 import React , {Component} from 'react';
 
 import {
-    Container,
-    Form,
-    Button
+    Container
 } from 'react-bootstrap';
 
 import axios from 'axios';

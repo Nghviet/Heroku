@@ -22,10 +22,14 @@ class Login extends Component {
         this.setState({ [evt.target.name]: evt.target.value });
     }
     onSubmitLogin(e) {
+        console.log("Login clicked");
         e.preventDefault();
         if(this.props.clicked) return;
         this.props.onClick();
+
+        console.log("Post");
         axios.post('API/login',this.state).then((res) => {
+            console.log(res);
             if(res.data.code === 1) {
                 this.token = res.data.token;
                 this.setState({token : res.data.token});
@@ -36,7 +40,13 @@ class Login extends Component {
     }
 
     //Render
-    render() {   
+    render() { 
+        var view;
+        if(!this.props.clicked)  view = <button  type = "submit"> Submit </button>;
+        else view = <button type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+                </button>
         return (
             <form onSubmit = {this.onSubmitLogin}>
                 <table className = "table table-borderless text-white w-auto">
@@ -53,7 +63,7 @@ class Login extends Component {
                                 <input type = "password" name = "password" onChange = {this.onChange} className = " input" required />
                             </th>
                             <th>
-                                <button type = "submit"> Submit </button>
+                                {view}
                             </th>
                         </tr>
                         </tbody>
