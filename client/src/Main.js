@@ -18,6 +18,7 @@ import Newsfeed from './Component/Newsfeed';
 import Search from './Component/Search';
 import Pending from './Component/Pending';
 import Messenger from './Component/Messenger';
+import Credit from './Credit';
 import { createBrowserHistory as createHistory } from "history";
 const history = createHistory();
 
@@ -95,6 +96,7 @@ class Main extends Component {
                         <Nav.Link href='/search'> Search </Nav.Link>
                         <Nav.Link href='/pending'> Pending </Nav.Link>
                         <Nav.Link href='/messenger'> Messenger </Nav.Link>
+                        <Nav.Link href='/credit'> Credit </Nav.Link>
                     </Nav>
 
                     <Button onClick = {this.logOut}> Logout</Button>                 
@@ -105,6 +107,7 @@ class Main extends Component {
                     <Route path = "/search"> <Search keyword = {this.state.keyword} id = {this.state.userID} /> </Route>
                     <Route path = "/pending"> <Pending id = {this.state.userID} /> </Route>
                     <Route path = "/messenger"> <Messenger id = {this.state.userID} /> </Route>
+                    <Route path = "/credit"> <Credit/> </Route>
                     <Route exact path = "/"> <Newsfeed key = {this.state.userID} id = {this.state.userID} name = {this.state.name}/> </Route>    
                 </Switch>
             </Router>
