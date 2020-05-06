@@ -4,11 +4,14 @@ Current feature:
 - Login/ Signin  
 - Post  
 - Send/ Accept friend request  
-- Chat ( not test )
+- Chat ( need improvement on SocketIO and DB access time )  
+- Like  
+- Personal page
 
 On develop:  
-- Personal page  
-- Like/Comment on post
+- Group  
+- Share  
+- Comment on post <- ( stuck at ReactJS side )
 
 DB:  
 
