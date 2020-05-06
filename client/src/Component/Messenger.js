@@ -105,6 +105,9 @@ class Messenger extends Component {
 
         return (
             <div class = "container">
+                <div class="alert alert-danger" role="alert">
+                    Due to time delay in db access and socket, receiving message might not be possible. Will be patch soon.
+                </div>
                 <div class="messaging">
                     <div class = "inbox_people">
                         <div class = "chat_list active_chat">

@@ -19,6 +19,7 @@ import Search from './Component/Search';
 import Pending from './Component/Pending';
 import Messenger from './Component/Messenger';
 import Credit from './Credit';
+import User from './Component/User';
 import { createBrowserHistory as createHistory } from "history";
 const history = createHistory();
 
@@ -108,6 +109,7 @@ class Main extends Component {
                     <Route path = "/pending"> <Pending id = {this.state.userID} /> </Route>
                     <Route path = "/messenger"> <Messenger id = {this.state.userID} /> </Route>
                     <Route path = "/credit"> <Credit/> </Route>
+                    <Route path = "/user/:id" component = {User} ></Route>
                     <Route exact path = "/"> <Newsfeed key = {this.state.userID} id = {this.state.userID} name = {this.state.name}/> </Route>    
                 </Switch>
             </Router>

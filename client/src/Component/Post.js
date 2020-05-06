@@ -1,6 +1,7 @@
 import React ,{Component} from 'react';
 import {
-    Card
+    Card,
+    Button
 } from 'react-bootstrap'
 class Post extends Component {
 	constructor(props) {
@@ -11,7 +12,6 @@ class Post extends Component {
         var deltaTime = (now.getTime() - date.getTime())/1000;
         deltaTime = Math.round(deltaTime);
         var time;
-
         if(deltaTime < 60) {
             time = deltaTime + "seconds ago";
         }
@@ -46,23 +46,46 @@ class Post extends Component {
         this.state = {
             name : post.name,
             post : post.post,
-            time : time 
+            idpost : post.idpost,
+            time : time ,
+            id : post.post_userid,
+            reacted : post.reacted
         }
-	
+    }
 
+    onChangeState = () => {
+        if(this.state.reacted == "0")
+            this.setState ({reacted : "1"});
+        else this.setState({reacted : "0"});
+    }
+
+    onClick = () => {
+        console.log(this.state);
+        if(this.state.reacted == "0") {
+            this.props.onLike(this.state.idpost,this.onChangeState);
+        }
+        else {
+            this.props.onDislike(this.state.idpost,this.onChangeState);
+        }
     }
 
 	render() {
+        var userLink = "user/" + this.state.id;
+        var button;
+        if(this.state.reacted == "0") button = <Button variant="light" onClick = {this.onClick} >Like</Button> ;
+        else button = <Button variant="primary" onClick = {this.onClick} >Like</Button>;
+
 		return (
             <Card className = "mt-4">  
                 <Card.Header>
-                    {this.state.name}
+                    <a href = {userLink}> {this.state.name} </a>
+                    <p> {this.state.time}</p>
                 </Card.Header>
                 <Card.Body>
                     {this.state.post}
                 </Card.Body>
                 <Card.Footer>
-                    {this.state.time}
+                    {button}
                 </Card.Footer>
             </Card>
         ); 

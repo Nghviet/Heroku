@@ -28,6 +28,9 @@ class Newsfeed extends Component {
         }).catch(err =>{
             console.log(err)
         });
+
+        this.onLike = this.onLike.bind(this);
+        this.onDislike = this.onDislike.bind(this);
     }
 
     changeID = (newID) => {
@@ -51,18 +54,15 @@ class Newsfeed extends Component {
                 post : this.state.currentPost ,
                 name : this.state.name
             }
-
-
             
             axios.post('API/post', mess)
             .then( res => {
                 console.log(res);
                 if(res.code === 0) return;
-                console.log(this.state.currentPost);
                 var newPosts = this.state.newPost;
                 newPosts.unshift({
                     post : this.state.currentPost,
-                    id : newPosts.length
+                    id : res.data.result.insertId
                 });
                 this.setState({
                     currentPost : null,
@@ -70,17 +70,38 @@ class Newsfeed extends Component {
                 });
 
                 document.getElementById("newPost").value = "";
-                console.log(newPosts);
             })
             .catch(err =>{
                 console.log(err);
             });
-        }
-        
+        }     
     }
 
     onChange = (e) => {
         this.setState({currentPost : e.target.value});
+    }
+
+    onLike = (postid,callback) => {
+        console.log({
+            id : this.state.id,postid : postid
+        })
+        axios.post('API/like',{id : this.state.id,postid : postid})
+        .then( res => {
+                callback();
+        })
+        .catch(err => {
+
+        })
+    }
+
+    onDislike = (postid,callback) => {
+        axios.post('API/unlike',{id : this.state.id,postid : postid})
+        .then(res => {
+                callback();
+        })
+        .catch(err => {
+
+        })
     }
 
     render() {
@@ -90,17 +111,17 @@ class Newsfeed extends Component {
                 <Card.Header> New post</Card.Header>
                 <Card.Body> 
                     <form onSubmit = {this.onPost}> 
-                        <textarea className="form-control" id="newPost" rows="5" onChange = {this.onChange} />
+                        <textarea className="form-control" id="newPost" rows="5" onChange = {this.onChange}/>
                         <Button onClick = {this.onPost}> Post </Button> 
                     </form>
                 </Card.Body>
             </Card>
             {this.state.newPost.map(post => (
-                <NewPost key = {post.id} post = {post.post} name = {this.state.name} />
+                <NewPost key = {post.id} post = {post.post} postid = {post.id} name = {this.state.name} uid = {this.state.id}  onLike = {this.onLike} onDislike = {this.onDislike}/>
             ))}
 
             {this.state.post.map(post => (
-                <Post key = {post.id} post = {post} />
+                <Post key = {post.idpost} post = {post}   onLike = {this.onLike} onDislike = {this.onDislike}/>
             ))}
         </Container>);
     }
