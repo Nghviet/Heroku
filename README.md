@@ -15,7 +15,7 @@ On develop:
 
 DB:  
 
-![DB](https://github.com/Nghviet/Heroku/blob/master/DB.png)
+![DB](DB.png)
 
 Credit:  
 Nguyen Hoang Viet --- hoangviet0502.giangvo@gmail.com  
