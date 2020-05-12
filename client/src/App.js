@@ -15,7 +15,7 @@ class App extends Component {
         this.state = {
             id : localStorage.getItem('id'),
             name : localStorage.getItem('name'),
-            version : "v2"
+            version : "v3"
         }
     }
 
