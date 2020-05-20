@@ -32,6 +32,28 @@ class User extends Component {
         }).catch(err => {});
     }
 
+    onLike = (postid,callback) => {
+        console.log({
+            id : this.state.id,postid : postid
+        })
+        axios.post('/API/like',{id : this.state.id,postid : postid})
+        .then( res => {
+                callback();
+        })
+        .catch(err => {
+
+        })
+    }
+
+    onDislike = (postid,callback) => {
+        axios.post('/API/unlike',{id : this.state.id,postid : postid})
+        .then(res => {
+                callback();
+        })
+        .catch(err => {
+
+        })
+    }
 
     render() {
         console.log(this.state);
@@ -48,11 +70,11 @@ class User extends Component {
                     </Card.Body>
                 </Card>
                 {this.state.post.map(post => (
-                    <Post key = {post.idpost} post = {post} />
+                    <Post key = {post.idpost} post = {post}   onLike = {this.onLike} onDislike = {this.onDislike}/>
                 ))}
             </Container>
         );
     }
 }
 
-export default User
+export default User;

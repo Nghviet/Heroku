@@ -15,11 +15,12 @@ class App extends Component {
         this.state = {
             id : localStorage.getItem('id'),
             name : localStorage.getItem('name'),
-            version : "v3"
+            version : "v3.1"
         }
     }
 
     changeState = (id,name) => {
+        console.log("Called");
         if(id != null) this.setState({id : id,name:name});
         localStorage.setItem('id',id);
         localStorage.setItem('name',name);

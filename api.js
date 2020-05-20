@@ -124,21 +124,20 @@ router.post("/allPost", async(req,res) => {
 		}
 		var arr =[];
 		for(var i=0;i<friendList.length;i++) arr[i] = friendList[i].friendid;
-		con.query("SELECT if(exists(select * from react where post.idpost = react.like_postid and react.like_userid = '1'),1,0) reacted ,post.* FROM post WHERE post_userid IN (?) ORDER BY date DESC",[arr],(err,result) => {
+		con.query("SELECT if(exists(select * from react where post.idpost = react.like_postid and react.like_userid = '1'),1,0) reacted ,post.*,user.* FROM post inner join user on post.post_userid = user.id WHERE post_userid IN (?) ORDER BY date DESC",[arr],(err,result) => {
 			res.send(result);
 		})
 	});
 });
 
 router.post("/getPost",(req,res) => {
-    var id = req.body.id;t
-    con.query("select * from post where post_userid = '" + id + "'",(err,result) => {
+    var id = req.body.id;
+    con.query("SELECT if(exists(select * from react where post.idpost = react.like_postid and react.like_userid = '1'),1,0) reacted ,post.*,user.* FROM post inner join user on post.post_userid = user.id WHERE post_userid = '" + id + "' ORDER BY date DESC",(err,result) => {
         if(err) throw err;
         res.send({
             post:result,
 
         });
-        console.log(result);
     })
 })
 

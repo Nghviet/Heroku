@@ -32,6 +32,7 @@ class Signin extends Component {
                 this.setState({token : res.data.token});
                 this.props.checkSignin(res.data._id,this.state.name);
             }
+            else this.props.release(false);
         })
         .catch((err =>{
             console.log(err);

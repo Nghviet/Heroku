@@ -34,8 +34,8 @@ class Login extends Component {
                 this.token = res.data.token;
                 this.setState({token : res.data.token});
                 this.props.checkLogin(res.data._id,res.data.name);
-                
             }
+            else this.props.release(true);
         });
     }
 
