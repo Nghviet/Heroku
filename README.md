@@ -33,3 +33,5 @@ Note:
 - Change port in both index.js and Messenger.js ( default: 8080 )  
 - Change proxy if change index.js port in package.json in client
 
+On push: Heroku server will automatically build
+
