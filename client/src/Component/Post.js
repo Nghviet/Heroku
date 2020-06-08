@@ -2,7 +2,9 @@ import React ,{Component} from 'react';
 import {
     Card,
     Button
-} from 'react-bootstrap'
+} from 'react-bootstrap';
+
+import CommentBlock from './CommentBlock';
 class Post extends Component {
 	constructor(props) {
 		super(props);
@@ -49,8 +51,10 @@ class Post extends Component {
             idpost : post.idpost,
             time : time ,
             id : post.post_userid,
-            reacted : post.reacted
-        }
+            reacted : post.reacted,
+            comment : false
+        };
+        console.log(props.post);
     }
 
     onChangeState = () => {
@@ -69,13 +73,28 @@ class Post extends Component {
         }
     }
 
+    onOpenComment = () => {
+        console.log("Clicked");
+        if(this.state.comment == false) this.setState({comment:true});
+    }
+
+    onShare = () => {
+        console.log(this.state);
+    }
+
 	render() {
         var userLink = "user/" + this.state.id;
-        var button;
-        if(this.state.reacted == "0") button = <Button variant="light" onClick = {this.onClick} >Like</Button> ;
-        else button = <Button variant="primary" onClick = {this.onClick} >Like</Button>;
+        var likeButton;
+        if(this.state.reacted == "0") likeButton = <Button variant="light" onClick = {this.onClick} >Like</Button> ;
+        else likeButton = <Button variant="primary" onClick = {this.onClick} >Like</Button>;
 
-		return (
+        var commentButton = <Button variant = "light" onClick = {this.onOpenComment}> Comment </Button> ;
+        var commentBlock;
+        if(this.state.comment) commentBlock = <CommentBlock key = {this.state.idpost} pid = {this.state.idpost} />;
+		
+        var shareButton = <Button variant = "light" onClick = {this.onShare}> Share </Button>;
+
+        return (
             <Card className = "mt-4">  
                 <Card.Header>
                     <a href = {userLink}> {this.state.name} </a>
@@ -85,8 +104,10 @@ class Post extends Component {
                     {this.state.post}
                 </Card.Body>
                 <Card.Footer>
-                    {button}
+                    {likeButton} {commentButton} {shareButton}
                 </Card.Footer>
+
+                {commentBlock}
             </Card>
         ); 
 	}
