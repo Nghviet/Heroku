@@ -5,6 +5,8 @@ const bcrypt = require('bcrypt');
 
 const mysql = require('mysql');
 
+const nodemailer = require('nodemailer');
+
 const cookieParser = require('cookie-parser');
 var con;
 if (process.env.NODE_ENV !== 'production') {
@@ -100,11 +102,10 @@ router.post("/signup",async (req,res) => {
 
 router.post("/post",async(req,res) => {
 	var id = req.body.userID;
-	var name = req.body.name;
 	var post = req.body.post;
 	var time = Date.now();
-	con.query("INSERT INTO post (post_userid,name,post,date) " + 
-		"VALUE ('" + id + "', '" + name +"', '" + post + "', FROM_UNIXTIME('" + time *0.001+"'))", 
+	con.query("INSERT INTO post (post_userid,post,date) " + 
+		"VALUE ('" + id +"', '" + post + "', FROM_UNIXTIME('" + time *0.001+"'))", 
 		(err,result) => {
 			if(err) {
 				res.send({code : 0});
@@ -258,6 +259,28 @@ router.post("/unlike",(req,res) => {
 router.post("/likeList",(req,res) => {
     
 })
+
+router.post("/getComment",(req,res) => {
+    var pid = req.body.pid;
+    var from = req.body.from;
+    var amount = req.body.amount;
+
+    con.query("select * from comment inner join user on comment.comment_uid = user.id where comment.comment_pid = '" + pid + "' order by time desc limit " + from +","+amount,(err,result) => {
+        if(err) throw err;
+        res.send(result);
+    })
+});
+
+router.post("/comment",(req,res) => {
+    var uid = req.body.uid;
+    var pid = req.body.pid;
+    var comment = req.body.comment;
+    var time = Date.now()
+    con.query("insert into comment(comment_uid,comment_pid,comment,time) value ('" + uid +"', '" + pid + "', '" + comment +"', from_unixtime('"+time* 0.001 +"'))",(err,result) => {
+        if(err) throw err;
+        res.send(result);
+    })
+})  
 
 module.exports =  (io) => {
     var clients = [];
